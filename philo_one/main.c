@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/03 21:22:15 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 01:00:13 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,26 @@ unsigned long	get_time(void)
 	return (ret);
 }
 
-int		messages(const char *str, t_philo *ph)
+int		messages(const char *str, t_philo *ph, unsigned long time)
 {
 	char			*tmp;
 	char			*idx;
 	unsigned long	current_time;
 
-	current_time = get_time();
+	if (!time)
+		current_time = get_time();
+	else
+		current_time = time;
 	tmp = ft_lltoa(current_time - ph->program_start);
 	idx = ft_lltoa(ph->philo_idx);
 	pthread_mutex_lock(&ph->mutex->m_write);
-	ft_putstr(tmp);
-	ft_putstr("ms idx ");
-	ft_putstr(idx);
-	ft_putstr(str);
+	if (g_state != DIED)
+	{
+		ft_putstr(tmp);
+		ft_putstr("ms idx ");
+		ft_putstr(idx);
+		ft_putstr(str);
+	}
 	pthread_mutex_unlock(&ph->mutex->m_write);
 	free(tmp);
 	free(idx);
@@ -49,13 +55,9 @@ void	*print_do(void *tmp_ph)
 
 	ph = (t_philo *)tmp_ph;
 	pthread_create(&died, NULL, is_die, (void *)ph);
-	ph->program_start = get_time();
-	ph->last_meal = get_time();
 	ph->philo_idx % 2 ? 0 : usleep(ph->pd->time_to_eat);
 	while (42 && g_state != DIED)
 	{
-		if (grab_fork(ph) == -1)
-			break ;
 		if (eating(ph) == -1)
 			break ;
 		if (sleeping(ph) == -1)
@@ -67,14 +69,18 @@ void	*print_do(void *tmp_ph)
 	return (NULL);
 }
 
-int		make_threads(t_philo **ph, t_pd *pd)
+int		make_threads(t_philo *ph, t_pd *pd)
 {
+	unsigned long	time;
 	int				i;
 
 	i = 0;
+	time = get_time();
 	while (i < pd->num_of_philo)
 	{
-		if (pthread_create(&(*ph)[i].thread, NULL, print_do, &(*ph)[i]) < 0)
+		ph[i].program_start = time;
+		ph[i].last_meal = time;
+		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
 		{
 			ft_putstr("thread create error\n");
 			return (-1);
@@ -85,7 +91,7 @@ int		make_threads(t_philo **ph, t_pd *pd)
 	i = 0;
 	while (i < pd->num_of_philo)
 	{
-		pthread_join((*ph)[i].thread, NULL);
+		pthread_join(ph[i].thread, NULL);
 		i++;
 	}
 	return (0);
@@ -100,7 +106,7 @@ void	run(const char **argv)
 	input_args(&pd, (const char **)argv);
 	init_mutexes(&mutexes, &pd);
 	ph = init_threads(&pd, &mutexes);
-	make_threads(&ph, &pd);
+	make_threads(ph, &pd);
 	finish_threads(ph, &mutexes, &pd);
 }
 

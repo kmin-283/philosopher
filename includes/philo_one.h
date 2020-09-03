@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/03 20:22:03 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 00:56:05 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void		finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd);
 /*
 **					doing.c
 */
-int			grab_fork(t_philo *ph);
+int			grab_fork(t_philo *ph, unsigned long time);
 int			eating(t_philo *ph);
 int			sleeping(t_philo *ph);
 int			thinking(t_philo *ph);
@@ -77,5 +77,5 @@ void		*is_die(void *tmp_ph);
 **					main.c
 */
 unsigned long	get_time(void);
-int		messages(const char *str, t_philo *ph);
+int		messages(const char *str, t_philo *ph, unsigned long time);
 #endif
