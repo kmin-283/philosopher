@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:59:03 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/03 13:27:39 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/03 15:53:31 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	input_args(t_pd *pd, const char **argv)
 {
 	pd->num_of_philo = (int)input_arg(argv[1]);
 	pd->time_to_die = input_arg(argv[2]);
-	pd->time_to_eat = input_arg(argv[3]);
-	pd->time_to_sleep = input_arg(argv[4]);
+	pd->time_to_eat = input_arg(argv[3]) * 1000;
+	pd->time_to_sleep = input_arg(argv[4]) * 1000;
 	if (argv[5])
 		pd->num_of_must_eat = (int)input_arg(argv[5]);
 }

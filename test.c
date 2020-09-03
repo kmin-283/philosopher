@@ -55,6 +55,7 @@ int		main(void)
 	
 	pthread_join(p_thread1, (void *)&status);
 	pthread_join(p_thread2, (void *)&status);
-
+	gettimeofday(&mytime, NULL);
+	printf("%lu %lu %lu %lu\n",mytime.tv_sec, mytime.tv_usec, (mytime.tv_sec * 1000 + mytime.tv_usec / 1000), (mytime.tv_sec / 1000 + mytime.tv_usec * 1000));
 	return (0);
 }
