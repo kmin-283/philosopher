@@ -1,8 +1,8 @@
 NAME = philo_one
 
 CC = gcc
-CFLAGS = -g3 -fsanitize=address
-
+CFLAGS = -Wall -Werror -Wextra
+#-g3 -fsanitize=address#
 INC = ../includes
 
 UTILS = ../utils

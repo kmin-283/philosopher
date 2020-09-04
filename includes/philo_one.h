@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 00:56:05 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 14:05:26 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,13 @@ typedef struct			s_philo
 	t_mutex				*mutex;
 	t_pd				*pd;
 	int					philo_idx;
-	unsigned long		last_meal;
-	unsigned long		program_start;
+	long		last_meal;
+	long		program_start;
 }						t_philo;
 
 /*
 **					input_args.c
 */
-long		input_arg(const char *input);
 void		input_args(t_pd *pd, const char **argv);
 /*
 **					init.c
@@ -68,14 +67,14 @@ void		finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd);
 /*
 **					doing.c
 */
-int			grab_fork(t_philo *ph, unsigned long time);
-int			eating(t_philo *ph);
+int			grab_fork(t_philo *ph);
+int			eating(t_philo *tmp_ph);
 int			sleeping(t_philo *ph);
 int			thinking(t_philo *ph);
 void		*is_die(void *tmp_ph);
 /*
 **					main.c
 */
-unsigned long	get_time(void);
-int		messages(const char *str, t_philo *ph, unsigned long time);
+long	get_time(void);
+int		messages(const char *str, t_philo *ph);
 #endif

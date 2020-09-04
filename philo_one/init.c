@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/03 20:01:15 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 13:59:05 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_philo	*init_threads(t_pd *pd, t_mutex *mutexes)
 			ph[i].m_right_fork = &mutexes->m_forks[pd->num_of_philo];
 		else
 			ph[i].m_right_fork = &mutexes->m_forks[i - 1];
+		ph[i].program_start = get_time();
+		ph[i].last_meal = ph[i].program_start;
 		i++;
 	}
 	return (ph);

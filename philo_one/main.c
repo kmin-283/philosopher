@@ -6,32 +6,27 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 01:00:13 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 14:34:02 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-unsigned long	get_time(void)
+long	get_time(void)
 {
 	struct timeval	time;
-	unsigned long	ret;
 
 	gettimeofday(&time, NULL);
-	ret = (time.tv_usec / 1000) + (time.tv_sec * 1000);
-	return (ret);
+	return (time.tv_usec / 1000 + time.tv_sec * 1000);
 }
 
-int		messages(const char *str, t_philo *ph, unsigned long time)
+int		messages(const char *str, t_philo *ph)
 {
 	char			*tmp;
 	char			*idx;
 	unsigned long	current_time;
 
-	if (!time)
-		current_time = get_time();
-	else
-		current_time = time;
+	current_time = get_time();
 	tmp = ft_lltoa(current_time - ph->program_start);
 	idx = ft_lltoa(ph->philo_idx);
 	pthread_mutex_lock(&ph->mutex->m_write);
@@ -71,21 +66,17 @@ void	*print_do(void *tmp_ph)
 
 int		make_threads(t_philo *ph, t_pd *pd)
 {
-	unsigned long	time;
-	int				i;
+	int	i;
 
 	i = 0;
-	time = get_time();
 	while (i < pd->num_of_philo)
 	{
-		ph[i].program_start = time;
-		ph[i].last_meal = time;
 		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
 		{
 			ft_putstr("thread create error\n");
 			return (-1);
 		}
-		usleep(50);
+		usleep(20);
 		i++;
 	}
 	i = 0;
@@ -97,24 +88,21 @@ int		make_threads(t_philo *ph, t_pd *pd)
 	return (0);
 }
 
-void	run(const char **argv)
+int		main(int argc, char **argv)
 {
 	t_philo		*ph;
 	t_mutex		mutexes;
 	t_pd		pd;
 
-	input_args(&pd, (const char **)argv);
-	init_mutexes(&mutexes, &pd);
-	ph = init_threads(&pd, &mutexes);
-	make_threads(ph, &pd);
-	finish_threads(ph, &mutexes, &pd);
-}
-
-int		main(int argc, char **argv)
-{
 	if (argc < 5)
 		ft_putstr("Error! You should input nessasary arguments!\n");
 	else
-		run((const char **)argv);
+	{
+		input_args(&pd, (const char **)argv);
+		init_mutexes(&mutexes, &pd);
+		ph = init_threads(&pd, &mutexes);
+		make_threads(ph, &pd);
+		finish_threads(ph, &mutexes, &pd);
+	}
 	return (0);
 }
