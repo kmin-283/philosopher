@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 14:34:02 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 15:13:16 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int		make_threads(t_philo *ph, t_pd *pd)
 			ft_putstr("thread create error\n");
 			return (-1);
 		}
-		usleep(20);
+		usleep(FOR_PHILOS_ORDERING);
 		i++;
 	}
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 13:59:05 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 15:14:13 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int		init_mutexes(t_mutex *mutexes, t_pd *pd)
 		i++;
 	}
 	pthread_mutex_init(&mutexes->m_write, NULL);
-	pthread_mutex_init(&mutexes->m_died, NULL);
 	return (0);
 }
 
@@ -44,7 +43,7 @@ t_philo	*init_threads(t_pd *pd, t_mutex *mutexes)
 		ph[i].mutex = mutexes;
 		ph[i].m_left_fork = &mutexes->m_forks[i];
 		if (i - 1 < 0)
-			ph[i].m_right_fork = &mutexes->m_forks[pd->num_of_philo];
+			ph[i].m_right_fork = &mutexes->m_forks[pd->num_of_philo - 1];
 		else
 			ph[i].m_right_fork = &mutexes->m_forks[i - 1];
 		ph[i].program_start = get_time();

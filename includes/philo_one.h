@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 14:05:26 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 15:05:04 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@
 # include "utils.h"
 
 # define DIED 1
+# define FOR_PHILOS_ORDERING 20
+
 int					g_state;
 
 typedef struct		s_mutexes
 {
 	pthread_mutex_t	*m_forks;
 	pthread_mutex_t	m_write;
-	pthread_mutex_t m_died;
 }					t_mutex;
 
 typedef struct		s_philo_data
