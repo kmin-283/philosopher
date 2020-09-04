@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:01:48 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:21:56 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int		init_mutexes(t_mutex *mutexes, t_pd *pd)
 	int i;
 
 	i = 0;
-	if (!(mutexes->m_forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * pd->num_of_philo)))
+	if (!(mutexes->m_forks =
+	(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * pd->num_of_philo)))
 		return (-1);
 	while (i < pd->num_of_philo)
 	{

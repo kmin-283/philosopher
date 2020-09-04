@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:59:03 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:19:30 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:34:25 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ static int	check_args_validity(const char *str)
 		i++;
 	}
 	return (1);
+}
+
+static int	check_num_of_philo(int num_of_philo)
+{
+	if (num_of_philo == 1 || num_of_philo == 0)
+	{
+		ft_putstr("Error! The number of Philosopher is at least 2\n");
+		return (1);
+	}
+	return (0);
 }
 
 int			input_args(t_pd *pd, const char **argv)
@@ -48,5 +58,7 @@ int			input_args(t_pd *pd, const char **argv)
 	pd->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	if (argv[5])
 		pd->num_of_must_eat = (int)ft_atoi(argv[5]);
+	if (check_num_of_philo(pd->num_of_philo))
+		return (-1);
 	return (0);
 }
