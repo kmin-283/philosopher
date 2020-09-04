@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 17:01:00 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:22:11 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 21:09:18 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ void	*is_full(void *tmp_ph)
 			{
 				pthread_mutex_lock(&ph[i].mutex->m_write);
 				ft_putstr("All philosophers is full\n");
+				pthread_mutex_lock(&ph->mutex->m_state);
 				ph[i].pd->state = FULL;
+				pthread_mutex_unlock(&ph->mutex->m_state);
 				pthread_mutex_unlock(&ph[i].mutex->m_write);
 			}
 			i++;
@@ -50,9 +52,9 @@ void	*is_die(void *tmp_ph)
 		if (current_time - ph->last_meal > (unsigned long)ph->pd->time_to_die)
 		{
 			messages(" is died\n", ph);
-			pthread_mutex_lock(&ph->mutex->m_died);
+			pthread_mutex_lock(&ph->mutex->m_state);
 			ph->pd->state = DIED;
-			pthread_mutex_unlock(&ph->mutex->m_died);
+			pthread_mutex_unlock(&ph->mutex->m_state);
 			break ;
 		}
 	}

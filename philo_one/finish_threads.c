@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/02 13:23:09 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:22:18 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 21:08:28 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void		finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd)
 		i++;
 	}
 	pthread_mutex_destroy(&(mutexes->m_write));
+	pthread_mutex_destroy(&(mutexes->m_state));
+	pthread_mutex_destroy(&(mutexes->m_num_of_meals));
 	free(ph);
 	free(mutexes->m_forks);
 }

@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:14:43 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 21:08:20 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct		s_mutexes
 {
 	pthread_mutex_t	*m_forks;
 	pthread_mutex_t	m_write;
-	pthread_mutex_t m_died;
+	pthread_mutex_t m_state;
 	pthread_mutex_t m_num_of_meals;
 }					t_mutex;
 
