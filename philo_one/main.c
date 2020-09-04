@@ -6,11 +6,11 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 15:13:16 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:14:18 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "../includes/philo_one.h"
 
 long	get_time(void)
 {
@@ -30,7 +30,7 @@ int		messages(const char *str, t_philo *ph)
 	tmp = ft_lltoa(current_time - ph->program_start);
 	idx = ft_lltoa(ph->philo_idx);
 	pthread_mutex_lock(&ph->mutex->m_write);
-	if (g_state != DIED)
+	if (ph->pd->state != DIED && ph->pd->state != FULL)
 	{
 		ft_putstr(tmp);
 		ft_putstr("ms idx ");
@@ -51,14 +51,11 @@ void	*print_do(void *tmp_ph)
 	ph = (t_philo *)tmp_ph;
 	pthread_create(&died, NULL, is_die, (void *)ph);
 	ph->philo_idx % 2 ? 0 : usleep(ph->pd->time_to_eat);
-	while (42 && g_state != DIED)
+	while (42 && ph->pd->state != DIED && ph->pd->state != FULL)
 	{
-		if (eating(ph) == -1)
-			break ;
-		if (sleeping(ph) == -1)
-			break ;
-		if (thinking(ph) == -1)
-			break ;
+		eating(ph);
+		sleeping(ph);
+		thinking(ph);
 	}
 	pthread_detach(died);
 	return (NULL);
@@ -66,9 +63,11 @@ void	*print_do(void *tmp_ph)
 
 int		make_threads(t_philo *ph, t_pd *pd)
 {
-	int	i;
+	pthread_t	full;
+	int			i;
 
 	i = 0;
+	pthread_create(&full, NULL, is_full, (void *)ph);
 	while (i < pd->num_of_philo)
 	{
 		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
@@ -79,6 +78,7 @@ int		make_threads(t_philo *ph, t_pd *pd)
 		usleep(FOR_PHILOS_ORDERING);
 		i++;
 	}
+	pthread_detach(full);
 	i = 0;
 	while (i < pd->num_of_philo)
 	{
@@ -95,10 +95,11 @@ int		main(int argc, char **argv)
 	t_pd		pd;
 
 	if (argc < 5)
-		ft_putstr("Error! You should input nessasary arguments!\n");
+		ft_putstr("Error! You should enter at least 4 arguments!\n");
 	else
 	{
-		input_args(&pd, (const char **)argv);
+		if (input_args(&pd, (const char **)argv) == -1)
+			return (0);
 		init_mutexes(&mutexes, &pd);
 		ph = init_threads(&pd, &mutexes);
 		make_threads(ph, &pd);

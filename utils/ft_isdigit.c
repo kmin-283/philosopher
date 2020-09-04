@@ -1,28 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   finish_threads.c                                   :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/02 13:23:09 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:01:44 by kmin             ###   ########.fr       */
+/*   Created: 2020/02/24 14:27:48 by kmin              #+#    #+#             */
+/*   Updated: 2020/09/04 17:18:30 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "utils.h"
 
-void		finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd)
+int	ft_isdigit(int c)
 {
-	int i;
-
-	i = 0;
-	while (i < pd->num_of_philo)
-	{
-		pthread_mutex_destroy(&(mutexes->m_forks)[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&(mutexes->m_write));
-	free(ph);
-	free(mutexes->m_forks);
+	return (c >= 48 && c <= 57);
 }

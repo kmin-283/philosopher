@@ -6,15 +6,15 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:50:52 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 15:05:05 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:07:21 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "../includes/philo_one.h"
 
 int		grab_fork(t_philo *ph)
 {
-	if (g_state == DIED)
+	if (ph->pd->state == DIED && ph->pd->state != FULL)
 		return (-1);
 	pthread_mutex_lock(ph->m_right_fork);
 	pthread_mutex_lock(ph->m_left_fork);
@@ -24,7 +24,7 @@ int		grab_fork(t_philo *ph)
 
 int		eating(t_philo *ph)
 {
-	if (g_state == DIED)
+	if (ph->pd->state == DIED && ph->pd->state != FULL)
 		return (-1);
 	else
 	{
@@ -32,6 +32,9 @@ int		eating(t_philo *ph)
 		ph->last_meal = get_time();
 		messages(" is eating\n", ph);
 		usleep(ph->pd->time_to_eat);
+		pthread_mutex_lock(&ph->mutex->m_num_of_meals);
+		ph->pd->num_of_meals++;
+		pthread_mutex_unlock(&ph->mutex->m_num_of_meals);
 		pthread_mutex_unlock(ph->m_left_fork);
 		pthread_mutex_unlock(ph->m_right_fork);
 	}
@@ -40,7 +43,7 @@ int		eating(t_philo *ph)
 
 int		sleeping(t_philo *ph)
 {
-	if (g_state == DIED)
+	if (ph->pd->state == DIED && ph->pd->state != FULL)
 		return (-1);
 	else
 	{
@@ -52,28 +55,9 @@ int		sleeping(t_philo *ph)
 
 int		thinking(t_philo *ph)
 {
-	if (g_state == DIED)
+	if (ph->pd->state == DIED && ph->pd->state != FULL)
 		return (-1);
 	else
 		messages(" is thinking\n", ph);
 	return (0);
-}
-
-void	*is_die(void *tmp_ph)
-{
-	t_philo			*ph;
-	unsigned long	current_time;
-
-	ph = (t_philo *)tmp_ph;
-	while (42 && g_state != DIED)
-	{
-		current_time = get_time();
-		if (current_time - ph->last_meal > (unsigned long)ph->pd->time_to_die)
-		{
-			messages(" is died\n", ph);
-			g_state = DIED;
-			break ;
-		}
-	}
-	return (NULL);
 }

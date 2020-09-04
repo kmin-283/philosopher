@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 15:05:04 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:14:43 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 # include <sys/time.h>
 # include "utils.h"
 
+# define ALIVE 0
 # define DIED 1
+# define FULL 2
 # define FOR_PHILOS_ORDERING 20
 
 int					g_state;
@@ -29,6 +31,8 @@ typedef struct		s_mutexes
 {
 	pthread_mutex_t	*m_forks;
 	pthread_mutex_t	m_write;
+	pthread_mutex_t m_died;
+	pthread_mutex_t m_num_of_meals;
 }					t_mutex;
 
 typedef struct		s_philo_data
@@ -38,6 +42,8 @@ typedef struct		s_philo_data
 	long	time_to_eat;
 	long	time_to_sleep;
 	int		num_of_must_eat;
+	int		state;
+	long	num_of_meals;
 }					t_pd;
 
 typedef struct			s_philo
@@ -48,34 +54,38 @@ typedef struct			s_philo
 	t_mutex				*mutex;
 	t_pd				*pd;
 	int					philo_idx;
-	long		last_meal;
-	long		program_start;
+	long				last_meal;
+	long				program_start;
 }						t_philo;
 
 /*
-**					input_args.c
+**						input_args.c
 */
-void		input_args(t_pd *pd, const char **argv);
+int						input_args(t_pd *pd, const char **argv);
 /*
-**					init.c
+**						init.c
 */
-t_philo		*init_threads(t_pd *pd, t_mutex *mutexes);
-int			init_mutexes(t_mutex *mutexes, t_pd *pd);
+t_philo					*init_threads(t_pd *pd, t_mutex *mutexes);
+int						init_mutexes(t_mutex *mutexes, t_pd *pd);
 /*
-**					finish_threads.c
+**						finish_threads.c
 */
-void		finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd);
+void				finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd);
 /*
 **					doing.c
 */
-int			grab_fork(t_philo *ph);
-int			eating(t_philo *tmp_ph);
-int			sleeping(t_philo *ph);
-int			thinking(t_philo *ph);
-void		*is_die(void *tmp_ph);
+int					grab_fork(t_philo *ph);
+int					eating(t_philo *tmp_ph);
+int					sleeping(t_philo *ph);
+int					thinking(t_philo *ph);
+/*
+**							monitoring.c
+*/
+void				*is_die(void *tmp_ph);
+void				*is_full(void *tmp_ph);
 /*
 **					main.c
 */
-long	get_time(void);
-int		messages(const char *str, t_philo *ph);
+long				get_time(void);
+int					messages(const char *str, t_philo *ph);
 #endif

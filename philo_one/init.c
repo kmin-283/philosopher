@@ -6,11 +6,11 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 15:14:13 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/04 17:01:48 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "../includes/philo_one.h"
 
 int		init_mutexes(t_mutex *mutexes, t_pd *pd)
 {
@@ -25,6 +25,8 @@ int		init_mutexes(t_mutex *mutexes, t_pd *pd)
 		i++;
 	}
 	pthread_mutex_init(&mutexes->m_write, NULL);
+	pthread_mutex_init(&mutexes->m_died, NULL);
+	pthread_mutex_init(&mutexes->m_num_of_meals, NULL);
 	return (0);
 }
 
