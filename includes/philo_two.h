@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 16:39:27 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 17:22:39 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int						init_sems(t_sem *sems, t_pd *pd);
 /*
 **						finish_threads.c
 */
-void				finish_threads(t_philo *ph, t_sem *sems, t_pd *pd);
+void				finish_threads(t_philo *ph, t_sem *sems);
 /*
 **					doing.c
 */

@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 16:39:43 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 17:15:27 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,14 @@
 
 int		init_sems(t_sem *sems, t_pd *pd)
 {
-	if ((sems->s_forks = sem_open("/forks", O_CREAT, 0644, pd->num_of_philo)) == SEM_FAILED)
+	if ((sems->s_forks = sem_open("forks", O_CREAT, 0644, pd->num_of_philo)) == SEM_FAILED)
 		return (-1);
-	if ((sems->s_write = sem_open("/write", O_CREAT, 0644, WRITABLE)) == SEM_FAILED)
+	if ((sems->s_write = sem_open("write", O_CREAT, 0644, WRITABLE)) == SEM_FAILED)
 		return (-1);
-	if ((sems->s_state = sem_open("/state", O_CREAT, 0644, NORMAL)) == SEM_FAILED)
+	if ((sems->s_state = sem_open("state", O_CREAT, 0644, NORMAL)) == SEM_FAILED)
 		return (-1);
-	if (pd->num_of_must_eat != -1)
-	{
-		if ((sems->s_num_of_meals = sem_open("/total_meals", O_CREAT, 0644, 1)) == SEM_FAILED)
-			return (-1);
-	}
+	if ((sems->s_num_of_meals = sem_open("total_meals", O_CREAT, 0644, 1)) == SEM_FAILED)
+		return (-1);
 	return (0);
 }
 

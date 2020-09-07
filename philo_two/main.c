@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 16:39:21 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 17:22:27 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		main(int argc, char **argv)
 		init_sems(&sems, &pd);
 		ph = init_threads(&pd, &sems);
 		make_threads(ph, &pd);
-		finish_threads(ph, &sems, &pd);
+		finish_threads(ph, &sems);
 	}
 	return (0);
 }
