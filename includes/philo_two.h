@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 17:22:39 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 20:37:43 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ void				finish_threads(t_philo *ph, t_sem *sems);
 /*
 **					doing.c
 */
-int					grab_fork(t_philo *ph);
-int					eating(t_philo *tmp_ph);
-int					sleeping(t_philo *ph);
-int					thinking(t_philo *ph);
+void				grab_fork(t_philo *ph);
+void				eating(t_philo *tmp_ph);
+void				sleeping(t_philo *ph);
+void				thinking(t_philo *ph);
 /*
 **							monitoring.c
 */

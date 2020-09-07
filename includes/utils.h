@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 14:09:20 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:18:45 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 19:14:31 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ void	ft_putstr(const char *str);
 int		ft_strlen(const char *str);
 int		ft_atoi(const char *nptr);
 int		ft_isdigit(int c);
-char	*ft_lltoa(long long n);
+void	ft_putnbr_fd(unsigned long n, int fd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:04:07 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 17:15:27 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 20:16:29 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 int		init_sems(t_sem *sems, t_pd *pd)
 {
+	sem_unlink("forks");
+	sem_unlink("write");
+	sem_unlink("state");
+	sem_unlink("total_meals");
 	if ((sems->s_forks = sem_open("forks", O_CREAT, 0644, pd->num_of_philo)) == SEM_FAILED)
 		return (-1);
 	if ((sems->s_write = sem_open("write", O_CREAT, 0644, WRITABLE)) == SEM_FAILED)
@@ -39,7 +43,7 @@ t_philo	*init_threads(t_pd *pd, t_sem *sems)
 		ph[i].pd = pd;
 		ph[i].sems = sems;
 		ph[i].program_start = get_time();
-		ph[i].last_meal = ph[i].program_start;
+		ph[i].last_meal = get_time();
 		i++;
 	}
 	return (ph);

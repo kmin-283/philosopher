@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 17:28:42 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 20:35:32 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,23 @@ long	get_time(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return (time.tv_usec / 1000 + time.tv_sec * 1000);
+	return (time.tv_sec * 1000L + time.tv_usec / 1000L);
 }
 
 int		messages(const char *str, t_philo *ph)
 {
-	char			*tmp;
-	char			*idx;
 	unsigned long	current_time;
 
-	current_time = get_time();
-	tmp = ft_lltoa(current_time - ph->program_start);
-	idx = ft_lltoa(ph->philo_idx);
 	pthread_mutex_lock(&ph->mutex->m_write);
+	current_time = get_time();
 	if (ph->pd->state != DIED && ph->pd->state != FULL)
 	{
-		ft_putstr(tmp);
+		ft_putnbr_fd(current_time - ph->program_start, 1);
 		ft_putstr("ms idx ");
-		ft_putstr(idx);
+		ft_putnbr_fd(ph->philo_idx, 1);
 		ft_putstr(str);
 	}
 	pthread_mutex_unlock(&ph->mutex->m_write);
-	free(tmp);
-	free(idx);
 	return (0);
 }
 

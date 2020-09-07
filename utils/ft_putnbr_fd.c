@@ -6,59 +6,61 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 21:33:11 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/02 17:56:02 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 19:14:39 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-static	size_t	ft_check_digit(long long n)
+static void ft_putchar_fd(char c, int fd)
 {
-	size_t				i;
-	unsigned long long	tmp_n;
-
-	i = 0;
-	if (n == 0)
-		i = 1;
-	if (n < 0)
-	{
-		tmp_n = -n;
-		i++;
-	}
-	else
-		tmp_n = n;
-	while (tmp_n)
-	{
-		i++;
-		tmp_n /= 10;
-	}
-	return (i);
+	write(fd, &c, 1);
 }
 
-char			*ft_lltoa(long long n)
+static void ft_putstr_fd(char *s, int fd)
 {
-	char				*ptr;
-	char				*dicimal;
-	size_t				len;
-	unsigned long long	temp;
-	unsigned int		i;
-
-	dicimal = "0123456789";
-	len = ft_check_digit(n);
-	ptr = (char *)malloc(sizeof(char) * (len + 1));
-	i = 0;
-	if (ptr)
+	while (*s)
 	{
-		temp = n < 0 ? -n : n;
-		ptr[0] = '-';
-		if (n < 0)
-			i = 1;
-		ptr[len] = '\0';
-		while (len-- > i)
-		{
-			ptr[len] = dicimal[temp % 10];
-			temp /= 10;
-		}
+		ft_putchar_fd(*s, fd);
+		s++;
 	}
-	return (ptr);
+}
+
+static size_t	getlen(int num)
+{
+	size_t		len;
+
+	len = 0;
+	if (num == 0)
+		return (1);
+	if (num < 0)
+	{
+		num *= -1;
+		len++;
+	}
+	while (num > 0)
+	{
+		num /= 10;
+		len++;
+	}
+	return (len);
+}
+
+void			ft_putnbr_fd(unsigned long n, int fd)
+{
+	char	line[11];
+	size_t	i;
+
+	i = getlen(n);
+	line[i] = '\0';
+	i--;
+	if (n == 0)
+		ft_putchar_fd('0', fd);
+	while (n > 0)
+	{
+		line[i] = '0' + (n % 10);
+		n /= 10;
+		i--;
+	}
+	ft_putstr_fd(line, fd);
 }
