@@ -6,11 +6,11 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:59:03 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 15:04:01 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/07 15:34:26 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "../includes/philo_two.h"
 
 static int	check_args_validity(const char *str)
 {
@@ -52,12 +52,12 @@ int			input_args(t_pd *pd, const char **argv)
 	}
 	pd->num_of_meals = 0;
 	pd->state = ALIVE;
-	pd->num_of_philo = (int)ft_atoi(argv[1]);
+	pd->num_of_philo = ft_atoi(argv[1]);
 	pd->time_to_die = ft_atoi(argv[2]);
 	pd->time_to_eat = ft_atoi(argv[3]) * 1000;
 	pd->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	if (argv[5])
-		pd->num_of_must_eat = (int)ft_atoi(argv[5]);
+		pd->num_of_must_eat = ft_atoi(argv[5]);
 	else
 		pd->num_of_must_eat = -1;
 	if (check_num_of_philo(pd->num_of_philo))
