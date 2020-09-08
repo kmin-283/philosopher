@@ -6,11 +6,11 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/08 14:38:52 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/08 23:34:18 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_two.h"
+#include "../includes/philo_three.h"
 
 long	get_time(void)
 {
@@ -26,7 +26,7 @@ int		messages(const char *str, t_philo *ph)
 
 	sem_wait(ph->sems->s_write);
 	current_time = get_time();
-	if (ph->pd->state != DIED && ph->pd->state != FULL)
+	if (ph->pd->state != DIED)
 	{
 		ft_putnbr_fd(current_time - ph->program_start, 1);
 		ft_putstr("ms idx ");
@@ -37,53 +37,57 @@ int		messages(const char *str, t_philo *ph)
 	return (0);
 }
 
-void	*print_do(void *tmp_ph)
+void	print_do(t_philo *ph)
 {
-	t_philo		*ph;
 	pthread_t	died;
+	pthread_t	state;
 
-	ph = (t_philo *)tmp_ph;
 	pthread_create(&died, NULL, is_die, (void *)ph);
-	while (42 && ph->pd->state != DIED && ph->pd->state != FULL)
+	pthread_create(&state, NULL, which_state2, (void *)ph);
+	pthread_detach(died);
+	pthread_detach(state);
+	while (42 && ph->pd->state != DIED)
 	{
 		eating(ph);
-		sleeping(ph);
-		thinking(ph);
+		messages(" is sleeping\n", ph);
+		usleep(ph->pd->time_to_sleep);
+		messages(" is thinking\n", ph);
 	}
-	pthread_detach(died);
-	return (NULL);
 }
 
-int		make_threads(t_philo *ph, t_pd *pd)
+int		make_process(t_philo *ph, t_pd *pd)
 {
 	pthread_t	full;
+	pthread_t	state;
 	int			i;
 
 	i = 0;
-	pthread_create(&full, NULL, is_full, (void *)ph);
 	while (i < pd->num_of_philo)
 	{
-		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
+		if ((ph->pid[i] = fork()) == -1)
 		{
-			ft_putstr("thread create error\n");
+			ft_putstr("Error in make child process\n");
 			return (-1);
 		}
+		if (ph->pid[i++] == 0)
+		{
+			ph->philo_idx = i;
+			print_do(ph);
+			exit(0);
+		}
 		usleep(FOR_PHILOS_ORDERING);
-		i++;
 	}
+	pthread_create(&full, NULL, is_full, (void *)ph);
+	pthread_create(&state, NULL, which_state, (void *)ph);
 	pthread_detach(full);
-	i = 0;
-	while (i < pd->num_of_philo)
-	{
-		pthread_join(ph[i].thread, NULL);
-		i++;
-	}
+	pthread_detach(state);
+	wait_and_exit(ph);
 	return (0);
 }
 
 int		main(int argc, char **argv)
 {
-	t_philo		*ph;
+	t_philo		ph;
 	t_sem		sems;
 	t_pd		pd;
 
@@ -93,10 +97,11 @@ int		main(int argc, char **argv)
 	{
 		if (input_args(&pd, (const char **)argv) == -1)
 			return (0);
-		init_sems(&sems, &pd);
-		ph = init_threads(&pd, &sems);
-		make_threads(ph, &pd);
-		finish_semaphores(ph, &sems);
+		if (init_sems(&sems, &pd) == -1)
+			return (0);
+		init_struct(&ph, &pd, &sems);
+		make_process(&ph, &pd);
+		finish_semaphores(&ph, &sems);
 	}
 	return (0);
 }

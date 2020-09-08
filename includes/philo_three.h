@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_two.h                                        :+:      :+:    :+:   */
+/*   philo_three.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/08 14:25:58 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/08 21:49:40 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_TWO_H
-# define PHILO_TWO_H
+#ifndef PHILO_THREE_H
+# define PHILO_THREE_H
 # include <unistd.h>
 # include <stdio.h>
 # include <string.h>
 # include <pthread.h>
 # include <semaphore.h>
 # include <fcntl.h>
+# include <sys/wait.h>
 # include <stdlib.h>
 # include <sys/time.h>
 # include "utils.h"
@@ -36,7 +37,8 @@ typedef struct		s_semaphore
 	sem_t	*s_forks;
 	sem_t	*s_write;
 	sem_t	*s_state;
-	sem_t	*s_num_of_meals;
+	sem_t	*s_state2;
+	sem_t	*s_meal;
 }					t_sem;
 
 typedef struct		s_philo_data
@@ -52,8 +54,8 @@ typedef struct		s_philo_data
 
 typedef struct			s_philo
 {
-	pthread_t			thread;
 	t_sem				*sems;
+	pid_t				*pid;
 	t_pd				*pd;
 	int					philo_idx;
 	long				last_meal;
@@ -67,13 +69,13 @@ int						input_args(t_pd *pd, const char **argv);
 /*
 **						init.c
 */
-t_philo					*init_threads(t_pd *pd, t_sem *sems);
+void					init_struct(t_philo *ph, t_pd *pd, t_sem *sems);
 int						init_sems(t_sem *sems, t_pd *pd);
 /*
 **						finish_threads.c
 */
-void		finish_semaphores(t_philo *ph, t_sem *sems);
-
+void				finish_semaphores(t_philo *ph, t_sem *sems);
+void				wait_and_exit(t_philo *ph);
 /*
 **					doing.c
 */
@@ -84,6 +86,8 @@ void				thinking(t_philo *ph);
 /*
 **							monitoring.c
 */
+void				*which_state(void *tmp_ph);
+void				*which_state2(void *tmp_ph);
 void				*is_die(void *tmp_ph);
 void				*is_full(void *tmp_ph);
 /*
