@@ -6,13 +6,13 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/02 13:23:09 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/09 01:32:06 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:24:20 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo_three.h"
 
-void		finish_semaphores(t_philo *ph)
+void	finish_semaphores(t_philo *ph)
 {
 	sem_unlink("forks");
 	sem_unlink("write");
