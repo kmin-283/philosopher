@@ -1,21 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.h                                        :+:      :+:    :+:   */
+/*   philo_three.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/09 14:14:26 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 13:49:44 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_THREE_H
+# define PHILO_THREE_H
 # include <unistd.h>
 # include <stdio.h>
 # include <string.h>
 # include <pthread.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <sys/wait.h>
 # include <stdlib.h>
 # include <sys/time.h>
 # include "utils.h"
@@ -23,17 +26,20 @@
 # define ALIVE 0
 # define DIED 1
 # define FULL 2
+# define WRITABLE 1
+# define NORMAL 1
 # define FOR_PHILOS_ORDERING 20
 
 int					g_state;
 
-typedef struct		s_mutexes
+typedef struct		s_semaphore
 {
-	pthread_mutex_t	*m_forks;
-	pthread_mutex_t	m_write;
-	pthread_mutex_t m_state;
-	pthread_mutex_t m_num_of_meals;
-}					t_mutex;
+	sem_t	*s_forks;
+	sem_t	*s_write;
+	sem_t	*s_state_main;
+	sem_t	*s_state_philo;
+	sem_t	*s_meal;
+}					t_sem;
 
 typedef struct		s_philo_data
 {
@@ -48,10 +54,8 @@ typedef struct		s_philo_data
 
 typedef struct			s_philo
 {
-	pthread_t			thread;
-	pthread_mutex_t		*m_left_fork;
-	pthread_mutex_t		*m_right_fork;
-	t_mutex				*mutex;
+	t_sem				*sems;
+	pid_t				*pid;
 	t_pd				*pd;
 	int					philo_idx;
 	long				last_meal;
@@ -65,12 +69,13 @@ int						input_args(t_pd *pd, const char **argv);
 /*
 **						init.c
 */
-t_philo					*init_threads(t_pd *pd, t_mutex *mutexes);
-int						init_mutexes(t_mutex *mutexes, t_pd *pd);
+void					init_struct(t_philo *ph, t_pd *pd, t_sem *sems);
+int						init_sems(t_sem *sems, t_pd *pd);
 /*
 **						finish_threads.c
 */
-void				finish_threads(t_philo *ph, t_mutex *mutexes, t_pd *pd);
+void				finish_semaphores(t_philo *ph);
+void				wait_and_exit(t_philo *ph);
 /*
 **					doing.c
 */
@@ -79,6 +84,8 @@ void				eating(t_philo *tmp_ph);
 /*
 **							monitoring.c
 */
+void				*convert_state_in_child(void *tmp_ph);
+void				*convert_state_in_parent(void *tmp_ph);
 void				*is_die(void *tmp_ph);
 void				*is_full(void *tmp_ph);
 /*

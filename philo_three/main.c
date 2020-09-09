@@ -6,11 +6,11 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/09 14:18:14 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:04:09 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_two.h"
+#include "../includes/philo_three.h"
 
 long	get_time(void)
 {
@@ -34,14 +34,15 @@ int		messages(const char *str, t_philo *ph)
 	return (0);
 }
 
-void	*print_do(void *tmp_ph)
+void	print_do(t_philo *ph)
 {
-	t_philo		*ph;
 	pthread_t	died;
+	pthread_t	state;
 
-	ph = (t_philo *)tmp_ph;
 	pthread_create(&died, NULL, &is_die, (void *)ph);
 	pthread_detach(died);
+	pthread_create(&state, NULL, &convert_state_in_child, (void *)ph);
+	pthread_detach(state);
 	while (42 && ph->pd->state != DIED && ph->pd->state != FULL)
 	{
 		eating(ph);
@@ -49,36 +50,37 @@ void	*print_do(void *tmp_ph)
 		usleep(ph->pd->time_to_sleep);
 		messages(" is thinking\n", ph);
 	}
-	return (NULL);
 }
 
-int		make_threads(t_philo *ph, t_pd *pd)
+int		make_process(t_philo *ph, t_pd *pd)
 {
 	pthread_t	full;
+	pthread_t	state;
 	int			i;
 
 	i = 0;
 	while (i < pd->num_of_philo)
 	{
-		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
-		{
-			ft_putstr("thread create error\n");
+		if ((ph->pid[i] = fork()) == -1)
 			return (-1);
+		if (ph->pid[i++] == 0)
+		{
+			ph->philo_idx = i;
+			print_do(ph);
+			exit(0);
 		}
-		usleep(FOR_PHILOS_ORDERING);
-		i++;
 	}
 	pthread_create(&full, NULL, &is_full, (void *)ph);
 	pthread_detach(full);
-	i = 0;
-	while (i < pd->num_of_philo)
-		pthread_join(ph[i++].thread, NULL);
+	pthread_create(&state, NULL, &convert_state_in_parent, (void *)ph);
+	pthread_detach(state);
+	wait_and_exit(ph);
 	return (0);
 }
 
 int		main(int argc, char **argv)
 {
-	t_philo		*ph;
+	t_philo		ph;
 	t_sem		sems;
 	t_pd		pd;
 
@@ -90,9 +92,9 @@ int		main(int argc, char **argv)
 			return (0);
 		if (init_sems(&sems, &pd) == -1)
 			return (0);
-		ph = init_threads(&pd, &sems);
-		make_threads(ph, &pd);
-		finish_semaphores(ph, &sems);
+		init_struct(&ph, &pd, &sems);
+		make_process(&ph, &pd);
+		finish_semaphores(&ph);
 	}
 	return (0);
 }

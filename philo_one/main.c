@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 20:35:32 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:14:56 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,10 @@ long	get_time(void)
 
 int		messages(const char *str, t_philo *ph)
 {
-	unsigned long	current_time;
-
 	pthread_mutex_lock(&ph->mutex->m_write);
-	current_time = get_time();
 	if (ph->pd->state != DIED && ph->pd->state != FULL)
 	{
-		ft_putnbr_fd(current_time - ph->program_start, 1);
+		ft_putnbr_fd(get_time() - ph->program_start, 1);
 		ft_putstr("ms idx ");
 		ft_putnbr_fd(ph->philo_idx, 1);
 		ft_putstr(str);
@@ -43,15 +40,16 @@ void	*print_do(void *tmp_ph)
 	pthread_t	died;
 
 	ph = (t_philo *)tmp_ph;
-	pthread_create(&died, NULL, is_die, (void *)ph);
+	pthread_create(&died, NULL, &is_die, (void *)ph);
+	pthread_detach(died);
 	ph->philo_idx % 2 ? 0 : usleep(ph->pd->time_to_eat);
 	while (42 && ph->pd->state != DIED && ph->pd->state != FULL)
 	{
 		eating(ph);
-		sleeping(ph);
-		thinking(ph);
+		messages(" is sleeping\n", ph);
+		usleep(ph->pd->time_to_sleep);
+		messages(" is thinking\n", ph);
 	}
-	pthread_detach(died);
 	return (NULL);
 }
 
@@ -61,7 +59,6 @@ int		make_threads(t_philo *ph, t_pd *pd)
 	int			i;
 
 	i = 0;
-	pthread_create(&full, NULL, is_full, (void *)ph);
 	while (i < pd->num_of_philo)
 	{
 		if (pthread_create(&ph[i].thread, NULL, print_do, &ph[i]) < 0)
@@ -72,13 +69,11 @@ int		make_threads(t_philo *ph, t_pd *pd)
 		usleep(FOR_PHILOS_ORDERING);
 		i++;
 	}
+	pthread_create(&full, NULL, &is_full, (void *)ph);
 	pthread_detach(full);
 	i = 0;
 	while (i < pd->num_of_philo)
-	{
-		pthread_join(ph[i].thread, NULL);
-		i++;
-	}
+		pthread_join(ph[i++].thread, NULL);
 	return (0);
 }
 
@@ -94,7 +89,8 @@ int		main(int argc, char **argv)
 	{
 		if (input_args(&pd, (const char **)argv) == -1)
 			return (0);
-		init_mutexes(&mutexes, &pd);
+		if (init_mutexes(&mutexes, &pd) == -1)
+			return (0);
 		ph = init_threads(&pd, &mutexes);
 		make_threads(ph, &pd);
 		finish_threads(ph, &mutexes, &pd);

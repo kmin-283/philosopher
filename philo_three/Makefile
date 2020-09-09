@@ -1,4 +1,4 @@
-NAME = philo_one
+NAME = philo_three
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
@@ -26,3 +26,5 @@ fclean:
 			rm -rf $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

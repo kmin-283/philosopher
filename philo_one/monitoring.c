@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 17:01:00 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/04 21:09:18 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:16:52 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,11 @@ void	*is_full(void *tmp_ph)
 void	*is_die(void *tmp_ph)
 {
 	t_philo			*ph;
-	unsigned long	current_time;
 
 	ph = (t_philo *)tmp_ph;
 	while (42 && ph->pd->state != DIED && ph->pd->state != FULL)
 	{
-		current_time = get_time();
-		if (current_time - ph->last_meal > (unsigned long)ph->pd->time_to_die)
+		if (get_time() - ph->last_meal > ph->pd->time_to_die)
 		{
 			messages(" is died\n", ph);
 			pthread_mutex_lock(&ph->mutex->m_state);

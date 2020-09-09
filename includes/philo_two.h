@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:27:18 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/07 20:37:43 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:20:54 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ typedef struct		s_semaphore
 {
 	sem_t	*s_forks;
 	sem_t	*s_write;
-	sem_t	*s_state;
-	sem_t	*s_num_of_meals;
+	sem_t	*s_meal;
 }					t_sem;
 
 typedef struct		s_philo_data
@@ -72,14 +71,13 @@ int						init_sems(t_sem *sems, t_pd *pd);
 /*
 **						finish_threads.c
 */
-void				finish_threads(t_philo *ph, t_sem *sems);
+void				finish_semaphores(t_philo *ph, t_sem *sems);
+
 /*
 **					doing.c
 */
 void				grab_fork(t_philo *ph);
 void				eating(t_philo *tmp_ph);
-void				sleeping(t_philo *ph);
-void				thinking(t_philo *ph);
 /*
 **							monitoring.c
 */
