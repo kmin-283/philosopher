@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 13:26:58 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/09 14:04:09 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:50:53 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int		make_process(t_philo *ph, t_pd *pd)
 		}
 	}
 	pthread_create(&full, NULL, &is_full, (void *)ph);
-	pthread_detach(full);
 	pthread_create(&state, NULL, &convert_state_in_parent, (void *)ph);
-	pthread_detach(state);
+	pthread_join(full, NULL);
+	pthread_join(state, NULL);
 	wait_and_exit(ph);
 	return (0);
 }

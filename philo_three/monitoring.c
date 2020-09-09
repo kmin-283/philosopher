@@ -6,7 +6,7 @@
 /*   By: kmin <kmin@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 17:01:00 by kmin              #+#    #+#             */
-/*   Updated: 2020/09/09 14:06:50 by kmin             ###   ########.fr       */
+/*   Updated: 2020/09/09 14:55:09 by kmin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	*is_full(void *tmp_ph)
 			sem_wait(ph->sems->s_write);
 			ft_putstr("All philosophers is full\n");
 			sem_post(ph->sems->s_write);
+			break ;
 		}
 	}
 	return (NULL);
@@ -71,6 +72,8 @@ void	*is_die(void *tmp_ph)
 			ph->pd->state = DIED;
 			sem_post(ph->sems->s_state_main);
 			sem_post(ph->sems->s_state_philo);
+			sem_post(ph->sems->s_meal);
+			break ;
 		}
 	}
 	return (NULL);
